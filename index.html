@@ -1,0 +1,2312 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pelaporan Kehadiran Asrama SRT 1 Soppeng</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7f5;color:#222}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+
+.login{
+ min-height:100vh;display:flex;align-items:center;justify-content:center;
+ padding:20px;background:linear-gradient(135deg,#0d4a31,#28734f)
+}
+.login-box{
+ width:100%;max-width:390px;background:white;padding:30px;border-radius:18px;
+ box-shadow:0 10px 35px #0004
+}
+.login-box h2{text-align:center;margin:0}
+.login-box p{text-align:center;color:#777}
+.login-box label{display:block;font-weight:bold;margin-top:15px}
+.login-box input{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px}
+.login-btn{
+ width:100%;margin-top:20px;padding:13px;border:0;border-radius:8px;
+ background:#17633f;color:white;font-weight:bold
+}
+.error{display:none;color:#c62828;text-align:center;margin-top:12px}
+
+.app{display:none}
+.sidebar{
+ position:fixed;left:0;top:0;bottom:0;width:255px;background:#123d2b;
+ color:white;overflow-y:auto;z-index:1000
+}
+.logo{padding:20px 10px;text-align:center;background:#0b2d1f}
+.logo small{display:block;margin-top:5px;opacity:.7}
+.menu{padding:10px}
+.group{margin:18px 8px 6px;font-size:11px;opacity:.6}
+.menu button{
+ width:100%;border:0;background:none;color:white;text-align:left;
+ padding:11px;border-radius:7px;margin:1px 0
+}
+.menu button:hover{background:#286347}
+
+.main{margin-left:255px}
+.topbar{
+ height:65px;background:white;display:flex;align-items:center;
+ justify-content:space-between;padding:0 20px;position:sticky;top:0;
+ z-index:100;box-shadow:0 2px 8px #0001
+}
+.toggle{display:none;background:#123d2b;color:white;border:0;padding:8px 11px;border-radius:7px}
+.badge{background:#e4f1ea;color:#145b3b;padding:8px 12px;border-radius:20px;font-size:13px}
+.content{padding:20px}
+
+.page{display:none}
+.page.active{display:block}
+
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.card{background:white;padding:20px;border-radius:12px;box-shadow:0 2px 8px #0001}
+.number{font-size:30px;font-weight:bold;margin-top:8px}
+
+.form{background:#fff;padding:20px;border-radius:12px;box-shadow:0 2px 8px #0001}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+
+label{display:block;font-weight:bold;font-size:13px;margin-bottom:6px}
+input,select,textarea{
+ width:100%;padding:10px;border:1px solid #ccd5cf;border-radius:7px;background:white
+}
+textarea{min-height:70px;resize:vertical}
+
+.btn{border:0;border-radius:7px;padding:9px 13px;margin:2px;font-weight:bold}
+.primary{background:#17633f;color:white}
+.success{background:#2e7d32;color:white}
+.danger{background:#c62828;color:white}
+.gray{background:#777;color:white}
+.warning{background:#ef8f00;color:white}
+
+.notice{background:#fff4c7;padding:12px;border-radius:8px;margin-bottom:15px}
+.info{background:#e5f2eb;padding:12px;border-radius:8px;margin-bottom:15px}
+
+.table-wrap{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;background:white;margin-top:15px}
+th,td{padding:8px;border:1px solid #ddd;font-size:13px}
+th{background:#e9f1ec;text-align:center}
+td textarea{min-width:180px;min-height:55px}
+
+.status{
+ display:inline-block;padding:5px 9px;border-radius:15px;
+ font-size:11px;font-weight:bold
+}
+.menunggu{background:#fff0c2;color:#805900}
+.disetujui{background:#d8f3dc;color:#17652d}
+.ditolak{background:#ffdede;color:#a30000}
+
+@media(max-width:850px){
+ .cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+ .sidebar{transform:translateX(-100%);transition:.2s}
+ .sidebar.open{transform:translateX(0)}
+ .main{margin-left:0}
+ .toggle{display:inline-block}
+ .content{padding:12px}
+ .cards,.grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="login" id="loginPage">
+<div class="login-box">
+<h2>🏫 SRT 1 SOPPENG</h2>
+<p>Pelaporan Kehadiran Asrama</p>
+
+<label>Username</label>
+<input id="loginUsername">
+
+<label>Password</label>
+<input id="loginPassword" type="password">
+
+<button class="login-btn" onclick="login()">MASUK</button>
+
+<div class="error" id="loginError">
+Username atau password salah.
+</div>
+</div>
+</div>
+
+
+<!-- APLIKASI -->
+<div class="app" id="app">
+
+<aside class="sidebar" id="sidebar">
+
+<div class="logo">
+<b>🏫 SRT 1 SOPPENG</b>
+<small>Pelaporan Kehadiran Asrama</small>
+</div>
+
+<div class="menu">
+
+<div class="group">UTAMA</div>
+<button onclick="showPage('dashboard')">🏠 Dashboard</button>
+
+<div class="group">PESERTA DIDIK</div>
+<button onclick="showPage('siswa')">👨‍🎓 Data Peserta Didik</button>
+<button onclick="showPage('tambahSiswa')">➕ Tambah Peserta Didik</button>
+<button onclick="showPage('jenjang')">📚 Data Per Jenjang</button>
+
+<div class="group">ABSENSI</div>
+<button onclick="showPage('pagi')">🌅 Absensi Pagi</button>
+<button onclick="showPage('sore')">🌇 Absensi Sore</button>
+<button onclick="showPage('perJenjang')">📚 Per Jenjang</button>
+<button onclick="showPage('perKamar')">🏠 Per Kamar</button>
+<button onclick="showPage('riwayatAbsensi')">🕘 Riwayat Absensi</button>
+
+<div class="group">PERSURATAN</div>
+<button onclick="showPage('buatSurat')">📄 Buat Surat</button>
+<button onclick="showPage('riwayatSurat')">🗂️ Riwayat Surat</button>
+
+<div class="group">LAPORAN</div>
+<button onclick="showPage('laporan')">📊 Laporan</button>
+
+<div id="menuAdmin">
+<div class="group">PENGGUNA</div>
+<button onclick="showPage('pengguna')">👥 Data Pengguna</button>
+<button onclick="showPage('tambahUser')">➕ Tambah Pengguna</button>
+<button onclick="showPage('pembagian')">🏠 Pembagian Kamar</button>
+</div>
+
+<div class="group">LAINNYA</div>
+<button onclick="showPage('profil')">⚙️ Profil Aplikasi</button>
+<button onclick="logout()">🚪 Keluar</button>
+
+</div>
+</aside>
+
+
+<main class="main">
+
+<header class="topbar">
+<div>
+<button class="toggle" onclick="toggleMenu()">☰</button>
+<b id="pageTitle">Dashboard</b>
+</div>
+<div class="badge" id="userBadge"></div>
+</header>
+
+<div class="content">
+
+
+<!-- DASHBOARD -->
+<section class="page active" id="dashboard">
+
+<h1>🏠 Dashboard</h1>
+
+<div class="info" id="aksesInfo"></div>
+
+<div class="cards">
+
+<div class="card">
+👨‍🎓 Peserta Didik
+<div class="number" id="totalSiswa">0</div>
+</div>
+
+<div class="card">
+✅ Hadir Hari Ini
+<div class="number" id="totalHadir">0</div>
+</div>
+
+<div class="card">
+📄 Menunggu Persetujuan
+<div class="number" id="totalMenunggu">0</div>
+</div>
+
+<div class="card">
+✅ Surat Disetujui
+<div class="number" id="totalDisetujui">0</div>
+</div>
+
+</div>
+</section>
+
+
+<!-- DATA SISWA -->
+<section class="page" id="siswa">
+
+<h1>👨‍🎓 Data Peserta Didik</h1>
+
+<input id="cariSiswa"
+placeholder="Cari nama atau nomor kamar..."
+oninput="renderSiswa()"
+style="max-width:350px">
+
+<div class="table-wrap" id="tabelSiswa"></div>
+
+</section>
+
+
+<!-- TAMBAH SISWA -->
+<section class="page" id="tambahSiswa">
+
+<h1>➕ Tambah Peserta Didik</h1>
+
+<div class="form">
+
+<div class="grid">
+
+<div>
+<label>Nomor Kamar</label>
+<input id="sKamar">
+</div>
+
+<div>
+<label>Nama Peserta Didik</label>
+<input id="sNama">
+</div>
+
+<div>
+<label>Jenjang</label>
+<select id="sJenjang">
+<option>SD</option>
+<option>SMP</option>
+<option>SMA</option>
+</select>
+</div>
+
+<div>
+<label>Alamat</label>
+<input id="sAlamat">
+</div>
+
+<div>
+<label>Nama Orang Tua/Wali</label>
+<input id="sWali">
+</div>
+
+</div>
+
+<br>
+<button class="btn primary" onclick="tambahSiswa()">💾 Simpan</button>
+
+</div>
+</section>
+
+
+<!-- JENJANG -->
+<section class="page" id="jenjang">
+<h1>📚 Data Per Jenjang</h1>
+<div id="dataJenjang"></div>
+</section>
+
+
+<!-- ABSEN PAGI -->
+<section class="page" id="pagi">
+
+<h1>🌅 Absensi Pagi</h1>
+
+<div class="notice">
+Silakan pilih status kehadiran dan isi keterangan jika diperlukan.
+Keterangan tersimpan otomatis.
+</div>
+
+<div class="table-wrap" id="absenPagi"></div>
+
+</section>
+
+
+<!-- ABSEN SORE -->
+<section class="page" id="sore">
+
+<h1>🌇 Absensi Sore</h1>
+
+<div class="notice">
+Silakan pilih status kehadiran dan isi keterangan jika diperlukan.
+Keterangan tersimpan otomatis.
+</div>
+
+<div class="table-wrap" id="absenSore"></div>
+
+</section>
+
+
+<!-- PER JENJANG -->
+<section class="page" id="perJenjang">
+
+<h1>📚 Absensi Per Jenjang</h1>
+
+<div class="form">
+
+<label>Jenjang</label>
+
+<select id="filterJenjang" onchange="renderPerJenjang()">
+<option value="">Semua Jenjang</option>
+<option>SD</option>
+<option>SMP</option>
+<option>SMA</option>
+</select>
+
+<div class="table-wrap" id="hasilJenjang"></div>
+
+</div>
+</section>
+
+
+<!-- PER KAMAR -->
+<section class="page" id="perKamar">
+
+<h1>🏠 Rekap Absensi Per Kamar</h1>
+
+<div class="form">
+
+<div class="grid">
+
+<div>
+<label>Kamar</label>
+<select id="filterKamar" onchange="renderPerKamar()"></select>
+</div>
+
+<div>
+<label>Tanggal</label>
+<input type="date" id="tanggalPerKamar" onchange="renderPerKamar()">
+</div>
+
+</div>
+
+<br>
+
+<button class="btn primary" onclick="cetakPerKamarPDF()">
+📄 Cetak / Simpan PDF
+</button>
+
+<div class="table-wrap" id="hasilKamar"></div>
+
+</div>
+</section>
+
+
+<!-- RIWAYAT ABSENSI -->
+<section class="page" id="riwayatAbsensi">
+
+<h1>🕘 Riwayat Absensi</h1>
+
+<div class="table-wrap" id="riwayat"></div>
+
+</section>
+
+
+<!-- BUAT SURAT -->
+<section class="page" id="buatSurat">
+
+<h1>📄 Surat Keterangan</h1>
+
+<div class="notice">
+Wali Asuh mengajukan Surat Keterangan kepada Wali Asrama.
+Setelah disetujui, surat dapat dicetak.
+</div>
+
+<div class="form">
+
+<div class="grid">
+
+<div>
+<label>Nama Peserta Didik</label>
+<select id="suratSiswa" onchange="updateDataSurat()"></select>
+</div>
+
+<div>
+<label>No. Kamar</label>
+<input id="suratKamar" readonly>
+</div>
+
+<div>
+<label>Alamat</label>
+<input id="suratAlamat" readonly>
+</div>
+
+<div>
+<label>Wali/Orang Tua Peserta Didik</label>
+<input id="suratWali" readonly>
+</div>
+
+<div>
+<label>Tanggal Pulang</label>
+<input type="date" id="tanggalPulang">
+</div>
+
+<div>
+<label>Tanggal Rencana Kembali</label>
+<input type="date" id="tanggalKembali">
+</div>
+
+</div>
+
+<br>
+
+<label>Alasan</label>
+<textarea id="alasan"></textarea>
+
+<br>
+
+<button class="btn primary" onclick="buatSurat()">
+📤 Ajukan Surat
+</button>
+
+</div>
+</section>
+
+
+<!-- RIWAYAT SURAT -->
+<section class="page" id="riwayatSurat">
+
+<h1>🗂️ Riwayat Surat</h1>
+<div class="table-wrap" id="tabelSurat"></div>
+
+</section>
+
+
+<!-- LAPORAN -->
+<section class="page" id="laporan">
+
+<h1>📊 Laporan Kehadiran</h1>
+
+<div class="form">
+
+<h3>🏠 Rekap Kehadiran Per Kamar</h3>
+
+<div class="grid">
+
+<div>
+<label>Pilih Kamar</label>
+<select id="laporanKamar" onchange="tampilkanLaporanKamar()">
+<option value="">-- Pilih Kamar --</option>
+</select>
+</div>
+
+<div>
+<label>Tanggal</label>
+<input type="date" id="laporanTanggal"
+onchange="tampilkanLaporanKamar()">
+</div>
+
+</div>
+
+<br>
+
+<button class="btn primary" onclick="tampilkanLaporanKamar()">
+🔍 Tampilkan Rekap
+</button>
+
+<button class="btn success" onclick="cetakLaporanKamarPDF()">
+📄 Cetak / Simpan PDF
+</button>
+
+<div class="table-wrap" id="hasilLaporanKamar"></div>
+
+</div>
+</section>
+
+
+<!-- PENGGUNA -->
+<section class="page" id="pengguna">
+
+<h1>👥 Data Pengguna</h1>
+<div class="table-wrap" id="tabelUser"></div>
+
+</section>
+
+
+<!-- TAMBAH USER -->
+<section class="page" id="tambahUser">
+
+<h1>➕ Tambah Pengguna</h1>
+
+<div class="form">
+
+<div class="grid">
+
+<div>
+<label>Nama Lengkap</label>
+<input id="uNama">
+</div>
+
+<div>
+<label>Username</label>
+<input id="uUsername">
+</div>
+
+<div>
+<label>Password</label>
+<input id="uPassword" type="password">
+</div>
+
+<div>
+<label>Peran</label>
+<select id="uPeran" onchange="ubahPeran()">
+<option value="Admin">Wali Asrama / Admin</option>
+<option value="Wali Asuh">Wali Asuh</option>
+</select>
+</div>
+
+<div>
+<label>Kamar</label>
+<select id="uKamar"></select>
+</div>
+
+</div>
+
+<br>
+
+<button class="btn primary" onclick="simpanUser()">
+💾 Simpan Pengguna
+</button>
+
+</div>
+</section>
+
+
+<!-- PEMBAGIAN -->
+<section class="page" id="pembagian">
+
+<h1>🏠 Pembagian Kamar</h1>
+
+<div class="form">
+
+<div class="grid">
+
+<div>
+<label>Wali Asuh</label>
+<select id="pilihWali"></select>
+</div>
+
+<div>
+<label>Kamar</label>
+<select id="pilihKamar"></select>
+</div>
+
+</div>
+
+<br>
+
+<button class="btn primary" onclick="bagikanKamar()">
+💾 Simpan Pembagian
+</button>
+
+</div>
+
+<div class="table-wrap" id="tabelPembagian"></div>
+
+</section>
+
+
+<!-- PROFIL -->
+<section class="page" id="profil">
+
+<h1>⚙️ Profil Aplikasi</h1>
+
+<div class="form">
+
+<label>Nama Aplikasi</label>
+<input value="Pelaporan Kehadiran Asrama" readonly>
+
+<br><br>
+
+<label>Instansi</label>
+<input value="Sekolah Rakyat Terintegrasi 1 Kabupaten Soppeng" readonly>
+
+</div>
+</section>
+
+</div>
+</main>
+</div>
+
+
+<script>
+
+/* ================= DATA ================= */
+
+let siswa=JSON.parse(localStorage.getItem("srt_siswa"))||[];
+
+let absensi=JSON.parse(localStorage.getItem("srt_absensi"))||[];
+
+let surat=JSON.parse(localStorage.getItem("srt_surat"))||[];
+
+let users=JSON.parse(localStorage.getItem("srt_users"))||[
+{
+ id:1,
+ nama:"Wali Asrama",
+ username:"admin",
+ password:"admin123",
+ peran:"Admin",
+ kamar:"Semua Kamar",
+ status:"Aktif"
+}
+];
+
+let currentUser=null;
+
+
+/* ================= SIMPAN ================= */
+
+function save(){
+
+localStorage.setItem("srt_siswa",JSON.stringify(siswa));
+localStorage.setItem("srt_absensi",JSON.stringify(absensi));
+localStorage.setItem("srt_surat",JSON.stringify(surat));
+localStorage.setItem("srt_users",JSON.stringify(users));
+
+}
+
+
+/* ================= TANGGAL ================= */
+
+function today(){
+
+let d=new Date();
+
+return d.getFullYear()+"-"+
+String(d.getMonth()+1).padStart(2,"0")+"-"+
+String(d.getDate()).padStart(2,"0");
+
+}
+
+function formatTanggal(t){
+
+if(!t)return "-";
+
+return new Date(t+"T00:00:00").toLocaleDateString(
+"id-ID",
+{
+day:"2-digit",
+month:"long",
+year:"numeric"
+}
+);
+
+}
+
+function escapeHTML(v){
+
+return String(v??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+/* ================= LOGIN ================= */
+
+function login(){
+
+let username=document.getElementById("loginUsername").value.trim();
+
+let password=document.getElementById("loginPassword").value;
+
+let user=users.find(
+u=>u.username===username&&
+u.password===password&&
+u.status==="Aktif"
+);
+
+if(!user){
+
+document.getElementById("loginError").style.display="block";
+return;
+
+}
+
+currentUser=user;
+
+sessionStorage.setItem("srt_login",JSON.stringify(user));
+
+document.getElementById("loginPage").style.display="none";
+document.getElementById("app").style.display="block";
+
+setupUser();
+
+}
+
+function logout(){
+
+sessionStorage.removeItem("srt_login");
+location.reload();
+
+}
+
+
+/* ================= USER ================= */
+
+function setupUser(){
+
+document.getElementById("userBadge").innerText=
+"👤 "+currentUser.nama+
+" • "+
+(currentUser.peran==="Admin"?"WALI ASRAMA / ADMIN":"WALI ASUH");
+
+document.getElementById("menuAdmin").style.display=
+currentUser.peran==="Admin"?"block":"none";
+
+refresh();
+
+}
+
+
+/* ================= NAVIGASI ================= */
+
+function showPage(id){
+
+document.querySelectorAll(".page").forEach(
+p=>p.classList.remove("active")
+);
+
+let page=document.getElementById(id);
+
+if(!page)return;
+
+page.classList.add("active");
+
+let h=page.querySelector("h1");
+
+document.getElementById("pageTitle").innerText=
+h?h.innerText:"Dashboard";
+
+if(window.innerWidth<=650)
+document.getElementById("sidebar").classList.remove("open");
+
+refresh();
+
+}
+
+function toggleMenu(){
+
+document.getElementById("sidebar").classList.toggle("open");
+
+}
+
+
+/* ================= DATA SESUAI USER ================= */
+
+function dataSaya(){
+
+if(currentUser.peran==="Admin")
+return siswa;
+
+return siswa.filter(
+s=>s.kamar===currentUser.kamar
+);
+
+}
+
+
+/* ================= DASHBOARD ================= */
+
+function renderDashboard(){
+
+let data=dataSaya();
+
+document.getElementById("totalSiswa").innerText=data.length;
+
+let hadir=absensi.filter(a=>
+a.tanggal===today()&&
+a.status==="Hadir"&&
+data.some(s=>s.id===a.siswaId)
+).length;
+
+document.getElementById("totalHadir").innerText=hadir;
+
+let menunggu=surat.filter(s=>
+s.status==="Menunggu Persetujuan"&&
+(currentUser.peran==="Admin"||s.kamar===currentUser.kamar)
+).length;
+
+let disetujui=surat.filter(s=>
+s.status==="Disetujui"&&
+(currentUser.peran==="Admin"||s.kamar===currentUser.kamar)
+).length;
+
+document.getElementById("totalMenunggu").innerText=menunggu;
+document.getElementById("totalDisetujui").innerText=disetujui;
+
+document.getElementById("aksesInfo").innerHTML=
+currentUser.peran==="Admin"
+?
+"👑 <b>Wali Asrama/Admin:</b> dapat mengakses seluruh data."
+:
+"👤 <b>Wali Asuh:</b> mengakses data sesuai kamar.";
+
+}
+
+
+/* ================= TAMBAH SISWA ================= */
+
+function tambahSiswa(){
+
+if(currentUser.peran!=="Admin"){
+
+alert("Hanya Wali Asrama/Admin yang dapat menambah peserta didik.");
+return;
+
+}
+
+let data={
+id:Date.now(),
+kamar:document.getElementById("sKamar").value.trim(),
+nama:document.getElementById("sNama").value.trim(),
+jenjang:document.getElementById("sJenjang").value,
+alamat:document.getElementById("sAlamat").value.trim(),
+wali:document.getElementById("sWali").value.trim()
+};
+
+if(!data.kamar||!data.nama){
+
+alert("Nomor kamar dan nama wajib diisi.");
+return;
+
+}
+
+siswa.push(data);
+save();
+
+alert("Peserta didik berhasil ditambahkan.");
+
+["sKamar","sNama","sAlamat","sWali"].forEach(
+id=>document.getElementById(id).value=""
+);
+
+refresh();
+
+}
+
+
+/* ================= SISWA ================= */
+
+function renderSiswa(){
+
+let q=(document.getElementById("cariSiswa")?.value||"").toLowerCase();
+
+let data=dataSaya().filter(
+s=>s.nama.toLowerCase().includes(q)||
+s.kamar.toLowerCase().includes(q)
+);
+
+let html=`
+<table>
+<tr>
+<th>No</th>
+<th>Kamar</th>
+<th>Nama</th>
+<th>Jenjang</th>
+<th>Alamat</th>
+<th>Wali/Orang Tua</th>
+</tr>
+`;
+
+data.forEach((s,i)=>{
+
+html+=`
+<tr>
+<td>${i+1}</td>
+<td>${escapeHTML(s.kamar)}</td>
+<td>${escapeHTML(s.nama)}</td>
+<td>${escapeHTML(s.jenjang)}</td>
+<td>${escapeHTML(s.alamat)}</td>
+<td>${escapeHTML(s.wali)}</td>
+</tr>
+`;
+
+});
+
+html+="</table>";
+
+document.getElementById("tabelSiswa").innerHTML=html;
+
+}
+
+
+/* ================= JENJANG ================= */
+
+function renderJenjang(){
+
+let html="";
+
+["SD","SMP","SMA"].forEach(j=>{
+
+html+=`
+<div class="card" style="display:inline-block;margin:5px">
+<b>${j}</b>
+<div class="number">
+${dataSaya().filter(s=>s.jenjang===j).length}
+</div>
+</div>
+`;
+
+});
+
+document.getElementById("dataJenjang").innerHTML=html;
+
+}
+
+
+/* ==================================================
+   ABSENSI DENGAN KETERANGAN
+================================================== */
+
+function tabelAbsensi(waktu){
+
+let html=`
+
+<table>
+
+<tr>
+
+<th>No</th>
+<th>Kamar</th>
+<th>Nama</th>
+<th>Jenjang</th>
+<th>Status Kehadiran</th>
+<th>Keterangan</th>
+
+</tr>
+
+`;
+
+dataSaya().forEach((s,i)=>{
+
+let a=absensi.find(
+x=>x.siswaId===s.id&&
+x.tanggal===today()&&
+x.waktu===waktu
+);
+
+let status=a?.status||"Belum Absen";
+
+let keterangan=a?.keterangan||"";
+
+html+=`
+
+<tr>
+
+<td>${i+1}</td>
+
+<td>${escapeHTML(s.kamar)}</td>
+
+<td>${escapeHTML(s.nama)}</td>
+
+<td>${escapeHTML(s.jenjang)}</td>
+
+<td>
+
+<select
+onchange="simpanAbsensi(${s.id},'${waktu}',this.value)">
+
+<option ${status==="Belum Absen"?"selected":""}>
+Belum Absen
+</option>
+
+<option ${status==="Hadir"?"selected":""}>
+Hadir
+</option>
+
+<option ${status==="Izin"?"selected":""}>
+Izin
+</option>
+
+<option ${status==="Sakit"?"selected":""}>
+Sakit
+</option>
+
+<option ${status==="Alpa"?"selected":""}>
+Alpa
+</option>
+
+</select>
+
+</td>
+
+<td>
+
+<textarea
+placeholder="Isi keterangan..."
+onchange="simpanKeterangan(${s.id},'${waktu}',this.value)"
+>${escapeHTML(keterangan)}</textarea>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+html+="</table>";
+
+return html;
+
+}
+
+
+/* ================= SIMPAN STATUS ================= */
+
+function simpanAbsensi(id,waktu,status){
+
+let a=absensi.find(
+x=>x.siswaId===id&&
+x.tanggal===today()&&
+x.waktu===waktu
+);
+
+if(a){
+
+a.status=status;
+a.petugas=currentUser.nama;
+
+}else{
+
+a={
+id:Date.now(),
+siswaId:id,
+tanggal:today(),
+waktu:waktu,
+status:status,
+keterangan:"",
+petugas:currentUser.nama
+};
+
+absensi.push(a);
+
+}
+
+save();
+
+refresh();
+
+}
+
+
+/* ================= SIMPAN KETERANGAN ================= */
+
+function simpanKeterangan(id,waktu,keterangan){
+
+let a=absensi.find(
+x=>x.siswaId===id&&
+x.tanggal===today()&&
+x.waktu===waktu
+);
+
+if(!a){
+
+a={
+id:Date.now(),
+siswaId:id,
+tanggal:today(),
+waktu:waktu,
+status:"Belum Absen",
+keterangan:"",
+petugas:currentUser.nama
+};
+
+absensi.push(a);
+
+}
+
+a.keterangan=keterangan;
+a.petugas=currentUser.nama;
+
+save();
+
+}
+
+
+/* ================= PER JENJANG ================= */
+
+function renderPerJenjang(){
+
+let filter=document.getElementById("filterJenjang").value;
+
+let data=dataSaya();
+
+if(filter)
+data=data.filter(s=>s.jenjang===filter);
+
+let html=`
+
+<table>
+
+<tr>
+<th>No</th>
+<th>Kamar</th>
+<th>Nama</th>
+<th>Jenjang</th>
+<th>Pagi</th>
+<th>Keterangan Pagi</th>
+<th>Sore</th>
+<th>Keterangan Sore</th>
+</tr>
+
+`;
+
+data.forEach((s,i)=>{
+
+let pagi=absensi.find(
+a=>a.siswaId===s.id&&
+a.tanggal===today()&&
+a.waktu==="Pagi"
+);
+
+let sore=absensi.find(
+a=>a.siswaId===s.id&&
+a.tanggal===today()&&
+a.waktu==="Sore"
+);
+
+html+=`
+
+<tr>
+
+<td>${i+1}</td>
+<td>${escapeHTML(s.kamar)}</td>
+<td>${escapeHTML(s.nama)}</td>
+<td>${escapeHTML(s.jenjang)}</td>
+<td>${pagi?.status||"Belum Absen"}</td>
+<td>${escapeHTML(pagi?.keterangan||"-")}</td>
+<td>${sore?.status||"Belum Absen"}</td>
+<td>${escapeHTML(sore?.keterangan||"-")}</td>
+
+</tr>
+
+`;
+
+});
+
+html+="</table>";
+
+document.getElementById("hasilJenjang").innerHTML=html;
+
+}
+
+
+/* ================= KAMAR ================= */
+
+function isiSemuaKamar(){
+
+let kamar=[
+...new Set(
+dataSaya().map(s=>s.kamar)
+)
+].sort();
+
+["filterKamar","laporanKamar","uKamar","pilihKamar"].forEach(id=>{
+
+let el=document.getElementById(id);
+
+if(!el)return;
+
+let old=el.value;
+
+el.innerHTML="";
+
+if(id==="filterKamar"||id==="laporanKamar")
+el.innerHTML='<option value="">-- Pilih Kamar --</option>';
+
+kamar.forEach(k=>{
+
+el.innerHTML+=
+`<option value="${escapeHTML(k)}">
+Kamar ${escapeHTML(k)}
+</option>`;
+
+});
+
+if([...el.options].some(o=>o.value===old))
+el.value=old;
+
+});
+
+}
+
+
+/* ================= REKAP KAMAR ================= */
+
+function buatTabelRekap(data,tanggal){
+
+let html=`
+
+<h3>
+Rekap Kehadiran Kamar ${escapeHTML(data[0]?.kamar||"")}
+</h3>
+
+<p>
+Tanggal:
+<b>${formatTanggal(tanggal)}</b>
+</p>
+
+<table>
+
+<tr>
+<th>No</th>
+<th>Nama</th>
+<th>Jenjang</th>
+<th>Pagi</th>
+<th>Keterangan Pagi</th>
+<th>Sore</th>
+<th>Keterangan Sore</th>
+</tr>
+
+`;
+
+data.forEach((s,i)=>{
+
+let pagi=absensi.find(
+a=>a.siswaId===s.id&&
+a.tanggal===tanggal&&
+a.waktu==="Pagi"
+);
+
+let sore=absensi.find(
+a=>a.siswaId===s.id&&
+a.tanggal===tanggal&&
+a.waktu==="Sore"
+);
+
+html+=`
+
+<tr>
+
+<td>${i+1}</td>
+<td>${escapeHTML(s.nama)}</td>
+<td>${escapeHTML(s.jenjang)}</td>
+
+<td>${pagi?.status||"Belum Absen"}</td>
+
+<td>${escapeHTML(pagi?.keterangan||"-")}</td>
+
+<td>${sore?.status||"Belum Absen"}</td>
+
+<td>${escapeHTML(sore?.keterangan||"-")}</td>
+
+</tr>
+
+`;
+
+});
+
+html+="</table>";
+
+return html;
+
+}
+
+
+function renderPerKamar(){
+
+let kamar=document.getElementById("filterKamar").value;
+
+let tanggal=
+document.getElementById("tanggalPerKamar").value||today();
+
+if(!kamar){
+
+document.getElementById("hasilKamar").innerHTML=
+'<div class="notice">Silakan pilih kamar.</div>';
+
+return;
+
+}
+
+let data=dataSaya().filter(s=>s.kamar===kamar);
+
+document.getElementById("hasilKamar").innerHTML=
+buatTabelRekap(data,tanggal);
+
+}
+
+
+/* ================= RIWAYAT ================= */
+
+function renderRiwayat(){
+
+let html=`
+
+<table>
+
+<tr>
+<th>Tanggal</th>
+<th>Waktu</th>
+<th>Nama</th>
+<th>Kamar</th>
+<th>Status</th>
+<th>Keterangan</th>
+<th>Petugas</th>
+</tr>
+
+`;
+
+absensi.slice().reverse().forEach(a=>{
+
+let s=siswa.find(x=>x.id===a.siswaId);
+
+if(!s)return;
+
+if(
+currentUser.peran!=="Admin" &&
+s.kamar!==currentUser.kamar
+)return;
+
+html+=`
+
+<tr>
+
+<td>${formatTanggal(a.tanggal)}</td>
+<td>${a.waktu}</td>
+<td>${escapeHTML(s.nama)}</td>
+<td>${escapeHTML(s.kamar)}</td>
+<td>${a.status}</td>
+<td>${escapeHTML(a.keterangan||"-")}</td>
+<td>${escapeHTML(a.petugas||"-")}</td>
+
+</tr>
+
+`;
+
+});
+
+html+="</table>";
+
+document.getElementById("riwayat").innerHTML=html;
+
+}
+
+
+/* ==================================================
+   CETAK PDF PER KAMAR
+================================================== */
+
+function cetakLaporanKamarPDF(){
+
+let kamar=document.getElementById("laporanKamar").value;
+
+let tanggal=
+document.getElementById("laporanTanggal").value||today();
+
+if(!kamar){
+
+alert("Silakan pilih kamar terlebih dahulu.");
+return;
+
+}
+
+let data=dataSaya().filter(s=>s.kamar===kamar);
+
+if(!data.length){
+
+alert("Data peserta didik tidak ditemukan.");
+return;
+
+}
+
+let rows="";
+
+data.forEach((s,i)=>{
+
+let pagi=absensi.find(
+a=>a.siswaId===s.id&&
+a.tanggal===tanggal&&
+a.waktu==="Pagi"
+);
+
+let sore=absensi.find(
+a=>a.siswaId===s.id&&
+a.tanggal===tanggal&&
+a.waktu==="Sore"
+);
+
+rows+=`
+
+<tr>
+
+<td>${i+1}</td>
+
+<td>${escapeHTML(s.nama)}</td>
+
+<td>${escapeHTML(s.jenjang)}</td>
+
+<td>${pagi?.status||"Belum Absen"}</td>
+
+<td>${escapeHTML(pagi?.keterangan||"-")}</td>
+
+<td>${sore?.status||"Belum Absen"}</td>
+
+<td>${escapeHTML(sore?.keterangan||"-")}</td>
+
+</tr>
+
+`;
+
+});
+
+let win=window.open("","_blank","width=1000,height=700");
+
+if(!win){
+
+alert("Popup diblokir browser. Izinkan popup.");
+return;
+
+}
+
+win.document.write(`
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Rekap Kehadiran Kamar ${escapeHTML(kamar)}</title>
+
+<style>
+
+@page{
+size:A4 landscape;
+margin:12mm;
+}
+
+body{
+font-family:"Times New Roman",serif;
+font-size:11pt;
+color:#000;
+}
+
+.header{
+text-align:center;
+margin-bottom:20px;
+}
+
+.header h2{
+margin:0;
+font-size:17pt;
+}
+
+.header h3{
+margin:5px 0;
+font-size:13pt;
+}
+
+.info{
+margin-bottom:12px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+border:1px solid #000;
+padding:6px;
+text-align:center;
+}
+
+th{
+font-weight:bold;
+}
+
+td:nth-child(2),
+td:nth-child(5),
+td:nth-child(7){
+text-align:left;
+}
+
+.ttd{
+width:260px;
+margin-left:auto;
+margin-top:45px;
+text-align:center;
+}
+
+.ruang{
+margin-top:70px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h2>REKAP KEHADIRAN PESERTA DIDIK</h2>
+
+<h3>
+ASRAMA SEKOLAH RAKYAT TERINTEGRASI 1
+KABUPATEN SOPPENG
+</h3>
+
+</div>
+
+<div class="info">
+
+<b>Kamar:</b> ${escapeHTML(kamar)}
+<br>
+
+<b>Tanggal:</b> ${formatTanggal(tanggal)}
+
+</div>
+
+<table>
+
+<tr>
+<th>No</th>
+<th>Nama Peserta Didik</th>
+<th>Jenjang</th>
+<th>Absensi Pagi</th>
+<th>Keterangan Pagi</th>
+<th>Absensi Sore</th>
+<th>Keterangan Sore</th>
+</tr>
+
+${rows}
+
+</table>
+
+<div class="ttd">
+
+Soppeng, ${formatTanggal(tanggal)}
+
+<br><br>
+
+<b>WALI ASRAMA</b>
+
+<div class="ruang">
+
+<b>(........................................)</b>
+
+</div>
+
+</div>
+
+<script>
+window.onload=function(){
+window.print();
+};
+<\/script>
+
+</body>
+</html>
+
+`);
+
+win.document.close();
+
+}
+
+
+/* ================= LAPORAN ================= */
+
+function tampilkanLaporanKamar(){
+
+let kamar=document.getElementById("laporanKamar").value;
+
+let tanggal=
+document.getElementById("laporanTanggal").value||today();
+
+if(!kamar){
+
+document.getElementById("hasilLaporanKamar").innerHTML=
+'<div class="notice">Silakan pilih kamar terlebih dahulu.</div>';
+
+return;
+
+}
+
+let data=dataSaya().filter(s=>s.kamar===kamar);
+
+document.getElementById("hasilLaporanKamar").innerHTML=
+buatTabelRekap(data,tanggal);
+
+}
+
+
+/* ================= SURAT ================= */
+
+function isiSiswaSurat(){
+
+let select=document.getElementById("suratSiswa");
+
+if(!select)return;
+
+select.innerHTML="";
+
+dataSaya().forEach(s=>{
+
+select.innerHTML+=`
+<option value="${s.id}">
+${escapeHTML(s.nama)} - Kamar ${escapeHTML(s.kamar)}
+</option>
+`;
+
+});
+
+updateDataSurat();
+
+}
+
+function updateDataSurat(){
+
+let id=Number(document.getElementById("suratSiswa").value);
+
+let s=siswa.find(x=>x.id===id);
+
+if(!s)return;
+
+document.getElementById("suratKamar").value=s.kamar;
+document.getElementById("suratAlamat").value=s.alamat;
+document.getElementById("suratWali").value=s.wali;
+
+}
+
+function buatSurat(){
+
+if(currentUser.peran!=="Wali Asuh"){
+
+alert("Surat Keterangan diajukan oleh Wali Asuh.");
+return;
+
+}
+
+let id=Number(document.getElementById("suratSiswa").value);
+
+let s=siswa.find(x=>x.id===id);
+
+if(!s)return;
+
+let pulang=document.getElementById("tanggalPulang").value;
+let kembali=document.getElementById("tanggalKembali").value;
+let alasan=document.getElementById("alasan").value.trim();
+
+if(!pulang||!kembali||!alasan){
+
+alert("Tanggal dan alasan wajib diisi.");
+return;
+
+}
+
+surat.push({
+
+id:Date.now(),
+siswaId:s.id,
+nama:s.nama,
+kamar:s.kamar,
+alamat:s.alamat,
+wali:s.wali,
+tanggalPulang:pulang,
+tanggalKembali:kembali,
+alasan:alasan,
+diajukanOleh:currentUser.nama,
+status:"Menunggu Persetujuan",
+disetujuiOleh:""
+
+});
+
+save();
+
+alert("Surat berhasil diajukan kepada Wali Asrama.");
+
+document.getElementById("alasan").value="";
+
+refresh();
+
+}
+
+
+/* ================= RIWAYAT SURAT ================= */
+
+function renderSurat(){
+
+let html=`
+
+<table>
+
+<tr>
+<th>No</th>
+<th>Nama</th>
+<th>Kamar</th>
+<th>Tgl Pulang</th>
+<th>Tgl Kembali</th>
+<th>Alasan</th>
+<th>Status</th>
+<th>Aksi</th>
+</tr>
+
+`;
+
+surat.slice().reverse().forEach((s,i)=>{
+
+if(
+currentUser.peran==="Wali Asuh" &&
+s.kamar!==currentUser.kamar
+)return;
+
+let aksi="";
+
+if(
+currentUser.peran==="Admin" &&
+s.status==="Menunggu Persetujuan"
+){
+
+aksi+=`
+<button class="btn success"
+onclick="setujuiSurat(${s.id})">
+Setujui
+</button>
+
+<button class="btn danger"
+onclick="tolakSurat(${s.id})">
+Tolak
+</button>
+`;
+
+}
+
+if(s.status==="Disetujui"){
+
+aksi+=`
+<button class="btn primary"
+onclick="cetakSurat(${s.id})">
+🖨️ Cetak
+</button>
+`;
+
+}
+
+aksi+=`
+<button class="btn gray"
+onclick="hapusSurat(${s.id})">
+Hapus
+</button>
+`;
+
+html+=`
+
+<tr>
+
+<td>${i+1}</td>
+<td>${escapeHTML(s.nama)}</td>
+<td>${escapeHTML(s.kamar)}</td>
+<td>${s.tanggalPulang}</td>
+<td>${s.tanggalKembali}</td>
+<td>${escapeHTML(s.alasan)}</td>
+<td>${s.status}</td>
+<td>${aksi}</td>
+
+</tr>
+
+`;
+
+});
+
+html+="</table>";
+
+document.getElementById("tabelSurat").innerHTML=html;
+
+}
+
+function setujuiSurat(id){
+
+if(currentUser.peran!=="Admin")return;
+
+let s=surat.find(x=>x.id===id);
+
+if(!s)return;
+
+s.status="Disetujui";
+s.disetujuiOleh=currentUser.nama;
+
+save();
+refresh();
+
+}
+
+function tolakSurat(id){
+
+if(currentUser.peran!=="Admin")return;
+
+let s=surat.find(x=>x.id===id);
+
+if(!s)return;
+
+s.status="Ditolak";
+s.disetujuiOleh=currentUser.nama;
+
+save();
+refresh();
+
+}
+
+function hapusSurat(id){
+
+if(!confirm("Hapus riwayat surat?"))return;
+
+surat=surat.filter(x=>x.id!==id);
+
+save();
+refresh();
+
+}
+
+
+/* ================= CETAK SURAT ================= */
+
+function cetakSurat(id){
+
+let s=surat.find(x=>x.id===id);
+
+if(!s)return;
+
+if(s.status!=="Disetujui"){
+
+alert("Surat belum disetujui Wali Asrama.");
+return;
+
+}
+
+let win=window.open("","_blank");
+
+if(!win){
+
+alert("Popup diblokir browser.");
+return;
+
+}
+
+win.document.write(`
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>SURAT KETERANGAN</title>
+
+<style>
+
+body{
+font-family:"Times New Roman",serif;
+margin:45px;
+font-size:14px;
+line-height:1.7;
+}
+
+.judul{
+text-align:center;
+font-weight:bold;
+font-size:18px;
+text-decoration:underline;
+margin-bottom:30px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+td{
+padding:5px;
+vertical-align:top;
+}
+
+.ttd{
+width:280px;
+margin-left:auto;
+margin-top:60px;
+text-align:center;
+}
+
+.nama{
+margin-top:70px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="judul">SURAT KETERANGAN</div>
+
+<p>
+Yang bertanda tangan di bawah ini menerangkan bahwa:
+</p>
+
+<table>
+
+<tr>
+<td width="220">Nama Peserta Didik</td>
+<td width="10">:</td>
+<td><b>${escapeHTML(s.nama)}</b></td>
+</tr>
+
+<tr>
+<td>No. Kamar</td>
+<td>:</td>
+<td>${escapeHTML(s.kamar)}</td>
+</tr>
+
+<tr>
+<td>Alamat</td>
+<td>:</td>
+<td>${escapeHTML(s.alamat)}</td>
+</tr>
+
+<tr>
+<td>Wali/Orang Tua Peserta Didik</td>
+<td>:</td>
+<td>${escapeHTML(s.wali)}</td>
+</tr>
+
+<tr>
+<td>Tanggal Pulang</td>
+<td>:</td>
+<td>${s.tanggalPulang}</td>
+</tr>
+
+<tr>
+<td>Tanggal Rencana Kembali</td>
+<td>:</td>
+<td>${s.tanggalKembali}</td>
+</tr>
+
+<tr>
+<td>Alasan</td>
+<td>:</td>
+<td>${escapeHTML(s.alasan)}</td>
+</tr>
+
+</table>
+
+<p>
+Demikian Surat Keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya.
+</p>
+
+<div class="ttd">
+
+Soppeng, ${formatTanggal(today())}
+
+<br><br>
+
+<b>WALI ASRAMA</b>
+
+<div class="nama">
+<b>(........................................)</b>
+</div>
+
+</div>
+
+<script>
+window.onload=function(){
+window.print();
+};
+<\/script>
+
+</body>
+
+</html>
+
+`);
+
+win.document.close();
+
+}
+
+
+/* ================= USER ================= */
+
+function simpanUser(){
+
+if(currentUser.peran!=="Admin")return;
+
+let nama=document.getElementById("uNama").value.trim();
+let username=document.getElementById("uUsername").value.trim();
+let password=document.getElementById("uPassword").value;
+let peran=document.getElementById("uPeran").value;
+let kamar=document.getElementById("uKamar").value;
+
+if(!nama||!username||!password){
+
+alert("Lengkapi data pengguna.");
+return;
+
+}
+
+if(users.some(u=>u.username===username)){
+
+alert("Username sudah digunakan.");
+return;
+
+}
+
+users.push({
+
+id:Date.now(),
+nama,
+username,
+password,
+peran,
+kamar:peran==="Admin"?"Semua Kamar":kamar,
+status:"Aktif"
+
+});
+
+save();
+
+alert("Pengguna berhasil ditambahkan.");
+
+document.getElementById("uNama").value="";
+document.getElementById("uUsername").value="";
+document.getElementById("uPassword").value="";
+
+refresh();
+
+}
+
+function ubahPeran(){
+
+let peran=document.getElementById("uPeran").value;
+let k=document.getElementById("uKamar");
+
+if(peran==="Admin"){
+
+k.innerHTML="<option>Semua Kamar</option>";
+k.disabled=true;
+
+}else{
+
+k.disabled=false;
+isiSemuaKamar();
+
+}
+
+}
+
+function renderUsers(){
+
+let html=`
+
+<table>
+
+<tr>
+<th>No</th>
+<th>Nama</th>
+<th>Username</th>
+<th>Peran</th>
+<th>Kamar</th>
+<th>Status</th>
+<th>Aksi</th>
+</tr>
+
+`;
+
+users.forEach((u,i)=>{
+
+html+=`
+
+<tr>
+
+<td>${i+1}</td>
+<td>${escapeHTML(u.nama)}</td>
+<td>${escapeHTML(u.username)}</td>
+<td>${u.peran==="Admin"?"Wali Asrama / Admin":"Wali Asuh"}</td>
+<td>${escapeHTML(u.kamar)}</td>
+<td>${u.status}</td>
+
+<td>
+
+${
+u.id===1
+?"Admin Utama":
+`
+<button class="btn danger"
+onclick="hapusUser(${u.id})">
+Hapus
+</button>
+`
+}
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+html+="</table>";
+
+document.getElementById("tabelUser").innerHTML=html;
+
+}
+
+function hapusUser(id){
+
+if(id===1){
+
+alert("Admin utama tidak dapat dihapus.");
+return;
+
+}
+
+if(!confirm("Hapus pengguna?"))return;
+
+users=users.filter(u=>u.id!==id);
+
+save();
+refresh();
+
+}
+
+
+/* ================= PEMBAGIAN ================= */
+
+function isiWali(){
+
+let select=document.getElementById("pilihWali");
+
+if(!select)return;
+
+select.innerHTML="";
+
+users.filter(u=>u.peran==="Wali Asuh").forEach(u=>{
+
+select.innerHTML+=`
+<option value="${u.id}">
+${escapeHTML(u.nama)}
+</option>
+`;
+
+});
+
+}
+
+function bagikanKamar(){
+
+let id=Number(document.getElementById("pilihWali").value);
+let kamar=document.getElementById("pilihKamar").value;
+
+let u=users.find(x=>x.id===id);
+
+if(!u)return;
+
+u.kamar=kamar;
+
+save();
+
+alert("Pembagian kamar berhasil.");
+
+refresh();
+
+}
+
+function renderPembagian(){
+
+let html=`
+
+<table>
+
+<tr>
+<th>No</th>
+<th>Wali Asuh</th>
+<th>Username</th>
+<th>Kamar</th>
+</tr>
+
+`;
+
+users.filter(u=>u.peran==="Wali Asuh").forEach((u,i)=>{
+
+html+=`
+
+<tr>
+
+<td>${i+1}</td>
+<td>${escapeHTML(u.nama)}</td>
+<td>${escapeHTML(u.username)}</td>
+<td>${escapeHTML(u.kamar)}</td>
+
+</tr>
+
+`;
+
+});
+
+html+="</table>";
+
+document.getElementById("tabelPembagian").innerHTML=html;
+
+}
+
+
+/* ================= REFRESH ================= */
+
+function refresh(){
+
+if(!currentUser)return;
+
+renderDashboard();
+renderSiswa();
+renderJenjang();
+
+document.getElementById("absenPagi").innerHTML=
+tabelAbsensi("Pagi");
+
+document.getElementById("absenSore").innerHTML=
+tabelAbsensi("Sore");
+
+isiSemuaKamar();
+
+renderPerJenjang();
+renderPerKamar();
+renderRiwayat();
+isiSiswaSurat();
+renderSurat();
+
+let lt=document.getElementById("laporanTanggal");
+
+if(lt&&!lt.value)
+lt.value=today();
+
+if(currentUser.peran==="Admin"){
+
+renderUsers();
+isiWali();
+renderPembagian();
+
+}
+
+}
+
+
+/* ================= AUTO LOGIN ================= */
+
+let saved=sessionStorage.getItem("srt_login");
+
+if(saved){
+
+currentUser=JSON.parse(saved);
+
+document.getElementById("loginPage").style.display="none";
+document.getElementById("app").style.display="block";
+
+setupUser();
+
+}
+
+</script>
+
+</body>
+</html>
+```
